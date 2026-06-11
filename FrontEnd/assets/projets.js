@@ -1,4 +1,3 @@
-
 // Récup éventuelle des projets dans le localStorage
 let works = localStorage.getItem("works");
 
@@ -35,7 +34,64 @@ function displayWorks(works) {
 
         //Insertion de l'élément dans le DOM
         gallery.appendChild(workElement);
+        console.log("doneDisplay")
     }
 };
 
 displayWorks(works);
+
+// Récupération des CategoryIds
+//const CategoryIds = works.map(work => work.categoryId);
+
+// Mise à jour du CSS du bouton selectionné
+function updateButton(select){
+    const btns = document.querySelectorAll(".btn-filters button");
+    for(let i = 0; i < btns.length; i++){
+        if(i === select){
+            btns[i].classList.add("btn-selected")
+        } else {
+            btns[i].classList.remove("btn-selected")
+        }
+    }
+}
+
+// Afficher toutes les projets
+const allButton = document.querySelector(".btn-all");
+allButton.addEventListener("click", () => {
+    updateButton(0);
+    document.querySelector(".gallery").innerHTML =``;
+    displayWorks(works);
+});
+
+// Filtrer la catégorie objets
+const filterObjectsButton = document.querySelector(".btn-objects");
+filterObjectsButton.addEventListener("click", () => {
+    const filterObjects = works.filter((works) => {
+        return works.categoryId === 1;
+    });
+    updateButton(1);
+    document.querySelector(".gallery").innerHTML =``;
+    displayWorks(filterObjects);
+});
+
+// Filtrer la catégorie Appartements
+const filterAppartmentButton = document.querySelector(".btn-appartments");
+filterAppartmentButton.addEventListener("click", () => {
+    const filterAppartment = works.filter((works) => {
+        return works.categoryId === 2;
+    });
+    updateButton(2);
+    document.querySelector(".gallery").innerHTML =``;
+    displayWorks(filterAppartment);
+});
+
+// Filtrer la catégorie Appartements
+const filterHotelButton = document.querySelector(".btn-hotel");
+filterHotelButton.addEventListener("click", () => {
+    const filterHotel = works.filter((works) => {
+        return works.categoryId === 3;
+    });
+    updateButton(3);
+    document.querySelector(".gallery").innerHTML =``;
+    displayWorks(filterHotel);
+});
