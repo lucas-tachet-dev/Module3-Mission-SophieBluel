@@ -67,6 +67,7 @@ header {
 	justify-content: space-between;
 	margin: 50px 0
 }
+
 section {
 	margin: 50px 0
 }
@@ -93,6 +94,21 @@ h2{
 	font-size: 30px;
 	color: #1D6154
 }
+
+.edition-bar {
+	color: white;
+    background-color: black;
+    padding: 20px 0px;
+	margin: 0px -200px;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+
+	img {
+		height: 16px;
+	}
+}
+
 nav ul {
 	display: flex;
 	align-items: center;
@@ -139,6 +155,22 @@ nav a:hover {
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+}
+
+#portfolio .edit-projects {
+	color: black;
+	font-size: 14px;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	img{
+		fill: black;
+		height: 18px;
+	}
 }
 
 .btn-filters{
@@ -260,6 +292,10 @@ input[type="submit"]{
 	width: 180px;
 	text-align: center;
 	border-radius: 60px ;
+}
+
+.hidden {
+	display: none;
 }
 
 footer nav ul {

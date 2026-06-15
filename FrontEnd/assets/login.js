@@ -1,5 +1,3 @@
-
-
 // Submit du login
 const login = document.querySelector("#login");
 

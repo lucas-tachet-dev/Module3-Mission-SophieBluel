@@ -1,3 +1,47 @@
+//Récupération du token de Sophie
+let token = sessionStorage.getItem("token");
+
+// Vérification du token de login
+function checkLogin() {
+    const editionBar = document.querySelector(".edition-bar");
+    const projectsTitle = document.querySelector("#portfolio h2");
+    const btnfilters = document.querySelector(".btn-filters");
+
+    if(token){
+        // afficher les éléments du mode modification
+        editionBar.classList.remove("hidden");
+        projectsTitle.innerHTML = `Mes Projets
+        <span class="edit-projects">
+        <img src="assets/icons/pen-to-square.svg" alt="icône de modification"/> 
+        modifier</span>`;
+        btnfilters.classList.add("hidden");
+                
+        // Exécuter la fonction du setup de déconnexion
+        setupLogOut();
+    } else {
+        // S'assurer que les éléments soient cachés
+        btnfilters.classList.remove("hidden");
+        editionBar.classList.add("hidden");
+        projectsTitle.innerHTML = `Mes Projets`;
+    } 
+}
+
+function setupLogOut () {
+    // Cibler le LogOut
+    const logOutButton = document.getElementById("login");
+    // Changer le texte
+    logOutButton.innerText = "logout";
+    // Comportement du logout
+    logOutButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        logOutButton.innerText = "login";
+        sessionStorage.removeItem("token");
+        window.location.reload();
+    })
+}
+
+checkLogin();
+
 // Récup éventuelle des projets dans le localStorage
 let works = localStorage.getItem("works");
 
@@ -34,14 +78,10 @@ function displayWorks(works) {
 
         //Insertion de l'élément dans le DOM
         gallery.appendChild(workElement);
-        console.log("doneDisplay")
     }
 };
 
 displayWorks(works);
-
-// Récupération des CategoryIds
-//const CategoryIds = works.map(work => work.categoryId);
 
 // Mise à jour du CSS du bouton selectionné
 function updateButton(select){
