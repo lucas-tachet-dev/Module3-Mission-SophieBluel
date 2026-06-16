@@ -1,7 +1,10 @@
 // Submit du login
 const login = document.querySelector("#login");
+console.log(login)
 
-login.addEventListener("submit", async (event) => {
+const btnConnect = document.querySelector("#login button");
+
+btnConnect.addEventListener("click", async (event) => {
     event.preventDefault();
 
     //Récup des elem d'email et password
