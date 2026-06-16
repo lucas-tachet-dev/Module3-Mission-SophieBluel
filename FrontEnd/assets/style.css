@@ -99,13 +99,14 @@ h2{
 	color: white;
     background-color: black;
     padding: 20px 0px;
-	margin: 0px -200px;
+	margin: 0px -295px;
 	display: flex;
     align-items: center;
     justify-content: center;
 
 	img {
 		height: 16px;
+		filter: brightness(0) invert(1);
 	}
 }
 
@@ -168,7 +169,6 @@ nav a:hover {
 	align-items: center;
 	gap: 4px;
 	img{
-		fill: black;
 		height: 18px;
 	}
 }
@@ -304,3 +304,39 @@ footer nav ul {
 	margin: 2em
 }
 
+.modal {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
+.modal-wrapper{
+	background-color: white;
+	border-radius: 10px;
+	width: 630px;
+	max-width: calc(100vw - 30px);
+	max-height: calc(100vh - 30px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
+}
+
+.modal-wrapper button {
+	font-family: 'Syne';
+    font-weight: 700;
+    color: white;
+    background-color: #1D6154;
+    font-size: 16px;
+    margin: 2em auto;
+    padding: 10px 50px;
+    border: 0px solid #1D6154;
+    text-align: center;
+    border-radius: 60px;
+}

@@ -3,25 +3,31 @@ let token = sessionStorage.getItem("token");
 
 // Vérification du token de login
 function checkLogin() {
-    const editionBar = document.querySelector(".edition-bar");
+
     const projectsTitle = document.querySelector("#portfolio h2");
     const btnfilters = document.querySelector(".btn-filters");
+    const headerElement = document.querySelector("header")
+    const editionBar = document.createElement("div")
 
     if(token){
         // afficher les éléments du mode modification
-        editionBar.classList.remove("hidden");
+        // Bande Mode édition
+        editionBar.innerHTML = `<div class="edition-bar">
+        <img src="assets/icons/pen-to-square.svg" alt="icône de modification"/> Mode édition</div>`;
+        headerElement.insertAdjacentElement("beforebegin", editionBar);
+        // modifier les projets pour la modale
         projectsTitle.innerHTML = `Mes Projets
         <span class="edit-projects">
         <img src="assets/icons/pen-to-square.svg" alt="icône de modification"/> 
         modifier</span>`;
+
         btnfilters.classList.add("hidden");
-                
         // Exécuter la fonction du setup de déconnexion
         setupLogOut();
     } else {
         // S'assurer que les éléments soient cachés
         btnfilters.classList.remove("hidden");
-        editionBar.classList.add("hidden");
+        editionBar.remove();
         projectsTitle.innerHTML = `Mes Projets`;
     } 
 }
