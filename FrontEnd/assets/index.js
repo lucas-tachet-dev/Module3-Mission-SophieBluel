@@ -1,3 +1,5 @@
+import { displayModal } from "./modal.js";
+
 //Récupération du token de Sophie
 let token = sessionStorage.getItem("token");
 
@@ -88,6 +90,7 @@ function displayWorks(works) {
 };
 
 displayWorks(works);
+displayModal(works);
 
 // Mise à jour du CSS du bouton selectionné
 function updateButton(select){

@@ -325,7 +325,20 @@ footer nav ul {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 20px;
+	padding: 30px;
+
+}
+
+.modal-wrapper img {
+	height: 24px;
+	margin-left: auto;
+}
+
+.modal-wrapper h2 {
+	font-family: 'Work Sans';
+    font-weight: 400;
+    font-size: 26px;
+    color: black;
 }
 
 .modal-wrapper button {
@@ -339,4 +352,38 @@ footer nav ul {
     border: 0px solid #1D6154;
     text-align: center;
     border-radius: 60px;
+}
+
+.modal-grid{
+	padding: 30px 70px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 30px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.modal-grid figure {
+	width: 100%;
+	position: relative;
+	display: inline-block;
+}
+
+.modal-grid figure .modal-img {
+	display: block;
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+}
+
+.modal-grid figure .delete-icon {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	height: 15px;
+	z-index: 10;
+	border: 2px solid black;
+	border-radius: 5px;
+	background-color: black;
 }
