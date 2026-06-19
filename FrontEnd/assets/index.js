@@ -1,55 +1,5 @@
 import { displayModal } from "./modal.js";
 
-//Récupération du token de Sophie
-let token = sessionStorage.getItem("token");
-
-// Vérification du token de login
-function checkLogin() {
-
-    const projectsTitle = document.querySelector("#portfolio h2");
-    const btnfilters = document.querySelector(".btn-filters");
-    const headerElement = document.querySelector("header")
-    const editionBar = document.createElement("div")
-
-    if(token){
-        // afficher les éléments du mode modification
-        // Bande Mode édition
-        editionBar.innerHTML = `<div class="edition-bar">
-        <img src="assets/icons/pen-to-square.svg" alt="icône de modification"/> Mode édition</div>`;
-        headerElement.insertAdjacentElement("beforebegin", editionBar);
-        // modifier les projets pour la modale
-        projectsTitle.innerHTML = `Mes Projets
-        <span class="edit-projects">
-        <img src="assets/icons/pen-to-square.svg" alt="icône de modification"/> 
-        modifier</span>`;
-
-        btnfilters.classList.add("hidden");
-        // Exécuter la fonction du setup de déconnexion
-        setupLogOut();
-    } else {
-        // S'assurer que les éléments soient cachés
-        btnfilters.classList.remove("hidden");
-        editionBar.remove();
-        projectsTitle.innerHTML = `Mes Projets`;
-    } 
-}
-
-function setupLogOut () {
-    // Cibler le LogOut
-    const logOutButton = document.getElementById("login");
-    // Changer le texte
-    logOutButton.innerText = "logout";
-    // Comportement du logout
-    logOutButton.addEventListener("click", (event) => {
-        event.preventDefault();
-        logOutButton.innerText = "login";
-        sessionStorage.removeItem("token");
-        window.location.reload();
-    })
-}
-
-checkLogin();
-
 // Récup éventuelle des projets dans le localStorage
 let works = localStorage.getItem("works");
 
@@ -89,8 +39,62 @@ function displayWorks(works) {
     }
 };
 
-displayWorks(works);
-displayModal(works);
+//Récupération du token de Sophie
+let token = sessionStorage.getItem("token");
+
+// Vérification du token de login
+function checkLogin() {
+
+    const projectsTitle = document.querySelector("#portfolio h2");
+    const btnfilters = document.querySelector(".btn-filters");
+    const headerElement = document.querySelector("header")
+    const editionBar = document.createElement("div")
+
+    if(token){
+        // afficher les éléments du mode modification
+        // Bande Mode édition
+        editionBar.innerHTML = `<div class="edition-bar">
+        <img src="assets/icons/pen-to-square.svg" alt="icône de modification"/> Mode édition</div>`;
+        headerElement.insertAdjacentElement("beforebegin", editionBar);
+        // modifier les projets pour la modale
+        projectsTitle.innerHTML = `Mes Projets
+        <span class="edit-projects">
+        <img src="assets/icons/pen-to-square.svg" alt="icône de modification"/> 
+        modifier</span>`;
+
+        //Afficher la modale d'édition
+        const modalButton = document.querySelector(".edit-projects");
+        modalButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            displayModal(works)
+        });
+
+        btnfilters.classList.add("hidden");
+        // Exécuter la fonction du setup de déconnexion
+        setupLogOut();
+    } else {
+        // S'assurer que les éléments soient cachés
+        btnfilters.classList.remove("hidden");
+        editionBar.remove();
+        projectsTitle.innerHTML = `Mes Projets`;
+    } 
+}
+
+function setupLogOut () {
+    // Cibler le LogOut
+    const logOutButton = document.getElementById("login");
+    // Changer le texte
+    logOutButton.innerText = "logout";
+    // Comportement du logout
+    logOutButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        logOutButton.innerText = "login";
+        sessionStorage.removeItem("token");
+        window.location.reload();
+    })
+}
+
+
 
 // Mise à jour du CSS du bouton selectionné
 function updateButton(select){
@@ -144,3 +148,6 @@ filterHotelButton.addEventListener("click", () => {
     document.querySelector(".gallery").innerHTML =``;
     displayWorks(filterHotel);
 });
+
+displayWorks(works);
+checkLogin();
