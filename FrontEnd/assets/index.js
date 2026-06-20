@@ -66,7 +66,7 @@ function checkLogin() {
         const modalButton = document.querySelector(".edit-projects");
         modalButton.addEventListener("click", (event) => {
             event.stopPropagation();
-            displayModal(works)
+            displayModal(works);
         });
 
         btnfilters.classList.add("hidden");
@@ -93,8 +93,6 @@ function setupLogOut () {
         window.location.reload();
     })
 }
-
-
 
 // Mise à jour du CSS du bouton selectionné
 function updateButton(select){
