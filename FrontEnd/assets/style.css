@@ -340,8 +340,16 @@ footer nav ul {
 	height: 24px;
 }
 
+.modal-back {
+	display: none;
+}
+
 .modal-close {
 	margin-left: auto;
+}
+
+.visible {
+	display: block;
 }
 
 .modal-wrapper h2 {
@@ -365,8 +373,18 @@ footer nav ul {
     border-radius: 60px;
 }
 
+.modal-body {
+width: 70%;
+}
+
+.photo-gallery {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .modal-grid{
-	padding: 30px 70px;
+	padding: 30px 0px;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-column-gap: 10px;
@@ -398,18 +416,20 @@ footer nav ul {
 	border-radius: 5px;
 	background-color: black;
 }
-
-.modal-content, .upload-div {
+.modal-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.upload-div {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
-.modal-content {
-	width: 70%;
-}
-
 .form-add-photo {
+	display: flex;
+	flex-direction: column;
 	width: 100%;
 }
 
@@ -465,4 +485,15 @@ footer nav ul {
 }
 .photo-info label {
 	margin: 2em 0 1em 0;
+}
+
+#photo-upload {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
