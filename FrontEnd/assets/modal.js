@@ -30,14 +30,14 @@ const addPhoto = () => {
                     <span>+ Ajouter une photo</span>
                     <p>jpg, png : 4mo max</p>
                 </label>
-                <input type="file" id="photo-upload" accept="image/jpeg, image/png" />
+                <input type="file" id="photo-upload" name="image" accept="image/jpeg, image/png" />
             </div>
             <div class="photo-info">
                 <label for="photo-title">Titre</label>
-                <input type="text" name="photo-title" id="photo-title" required />
+                <input type="text" name="title" id="photo-title" required />
                 
                 <label for="category-select">Catégorie</label>
-                <select name="category" id="category-select" required>
+                <select id="category-select" required />
                     <option value=""></option>
                     ${generateCategoryOptions()} 
                 </select>
@@ -175,7 +175,49 @@ function switchAddPhoto() {
     modalElement.querySelector(".modal-back").classList.add("visible");   
     const modalBody = modalElement.querySelector(".modal-body");
     modalBody.innerHTML = addPhoto();
-    
+
+    const photoForm = modalElement.querySelector("form");
+    photoForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const photo = photoForm.querySelector("input[type=file]").files[0];
+        const photoTitle = photoForm.querySelector("input[type=text]").value;
+        const photoCategoryId = photoForm.querySelector("select");
+        const categoryValue = parseInt(photoCategoryId.value);
+
+        console.log("Fichier photo :", photo);
+        console.log("Titre :", photoTitle);
+        console.log("ID Catégorie envoyé :", categoryValue)
+
+        const formData = new FormData();
+        formData.append("image", photo);
+        formData.append("title", photoTitle);
+        formData.append("category", categoryValue);
+
+        let token = sessionStorage.getItem("token");
+        
+        try {
+            const response = await fetch(`http://localhost:5678/api/works`, {
+                method: "POST",
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            });
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    alert("Session expirée ou non autorisée. Veuillez vous reconnecter.");
+                } else {
+                    alert("Erreur lors de l'ajout du projet.");
+                }
+            } else {
+                alert("Projet ajouté avec succès !");
+                refreshGalleries();
+                photoForm.reset();
+            }
+
+        } catch (error) {
+            console.error("Erreur réseau :", error);
+        }
+    })  
 }
 
 /**
