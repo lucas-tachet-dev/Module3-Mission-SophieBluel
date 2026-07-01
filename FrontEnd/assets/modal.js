@@ -180,6 +180,14 @@ function switchAddPhoto() {
     photoForm.addEventListener("submit", async (event) => {
         event.preventDefault();
         const photo = photoForm.querySelector("input[type=file]").files[0];
+        const maxSize = 4 * 1024 * 1024;
+        
+        if(photo.size > maxSize) {
+            alert("Photo trop volumineuse");
+            photoForm.reset();
+            return
+        }
+
         const photoTitle = photoForm.querySelector("input[type=text]").value;
         const photoCategoryId = photoForm.querySelector("select");
         const categoryValue = parseInt(photoCategoryId.value);
