@@ -510,3 +510,11 @@ width: 70%;
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+
+#form-message {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    min-height: 20px;
+}

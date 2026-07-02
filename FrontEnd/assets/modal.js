@@ -43,6 +43,7 @@ const addPhoto = () => {
                 </select>
             </div>
             <button type="submit" class="btn-validate">Valider</button>
+            <span id="form-message"></span>
         </form>
     </div>`;
 };
@@ -192,9 +193,6 @@ function switchAddPhoto() {
         const photoCategoryId = photoForm.querySelector("select");
         const categoryValue = parseInt(photoCategoryId.value);
 
-        console.log("Fichier photo :", photo);
-        console.log("Titre :", photoTitle);
-        console.log("ID Catégorie envoyé :", categoryValue)
 
         const formData = new FormData();
         formData.append("image", photo);
@@ -202,6 +200,8 @@ function switchAddPhoto() {
         formData.append("category", categoryValue);
 
         let token = sessionStorage.getItem("token");
+
+        const messageSpan = photoForm.querySelector("#form-message")
         
         try {
             const response = await fetch(`http://localhost:5678/api/works`, {
@@ -211,22 +211,37 @@ function switchAddPhoto() {
             });
             
             if (!response.ok) {
+                messageSpan.style.color = "#d10000";
                 if (response.status === 401) {
-                    alert("Session expirée ou non autorisée. Veuillez vous reconnecter.");
+                    messageSpan.innerText = "Session expirée ou non autorisée. Veuillez vous reconnecter.";
                 } else {
-                    alert("Erreur lors de l'ajout du projet.");
+                    messageSpan.innerText = "Erreur lors de l'ajout du projet";
                 }
             } else {
-                alert("Projet ajouté avec succès !");
+                messageSpan.style.color = "#09ad2f";
+                messageSpan.innerText = "Projet ajouté avec succès !";
                 refreshGalleries();
                 photoForm.reset();
+
+                const labelPreview = photoForm.querySelector(".upload-div label");
+                const imgPreview = photoForm.querySelector(".img-preview");
+                
+                if (labelPreview) {
+                    labelPreview.style.display = "flex";
+                }
+                if (imgPreview) {
+                    imgPreview.remove();
+                }
+
+                setTimeout(() => {
+                    messageSpan.innerText = "";}, 3000)
             }
 
         } catch (error) {
             console.error("Erreur réseau :", error);
         }
     });
-    
+
     const fileInput = photoForm.querySelector("#photo-upload");
     const uploadDiv = photoForm.querySelector(".upload-div");
     
@@ -238,7 +253,15 @@ function switchAddPhoto() {
             
             reader.onload = function (e) {
                 // Vider la div Upload
-                uploadDiv.innerHTML = "";
+                const labelPreview = uploadDiv.querySelector("label");
+                if (labelPreview) {
+                    labelPreview.style.display = "none";
+                }
+
+                const existingPreview = uploadDiv.querySelector(".img-preview");
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
                 
                 // Création élément image d'aperçu
                 const imgPreview = document.createElement("img");
