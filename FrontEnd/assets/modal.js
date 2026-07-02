@@ -175,7 +175,7 @@ function switchAddPhoto() {
     modalElement.querySelector(".modal-back").classList.add("visible");   
     const modalBody = modalElement.querySelector(".modal-body");
     modalBody.innerHTML = addPhoto();
-
+    
     const photoForm = modalElement.querySelector("form");
     photoForm.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -225,7 +225,35 @@ function switchAddPhoto() {
         } catch (error) {
             console.error("Erreur réseau :", error);
         }
-    })  
+    });
+    
+    const fileInput = photoForm.querySelector("#photo-upload");
+    const uploadDiv = photoForm.querySelector(".upload-div");
+    
+    fileInput.addEventListener("change", () => {
+        const file = fileInput.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function (e) {
+                // Vider la div Upload
+                uploadDiv.innerHTML = "";
+                
+                // Création élément image d'aperçu
+                const imgPreview = document.createElement("img");
+                imgPreview.src = e.target.result;
+                imgPreview.alt = "Aperçu de la photo";
+                imgPreview.classList.add("img-preview");
+                
+                // On l'ajoute dans la div
+                uploadDiv.appendChild(imgPreview);
+            };
+            
+            // Lancement lecture du fichier
+            reader.readAsDataURL(file);
+        }
+    });
 }
 
 /**
