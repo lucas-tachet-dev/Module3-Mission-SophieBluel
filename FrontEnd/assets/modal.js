@@ -9,6 +9,7 @@ const photoGallery = `
     <div class="modal-grid">
     </div>
     <button class="btn-add-photo">Ajouter une photo</button>
+    <span id="delete-message"></span>
 </div>`;
 
 /**
@@ -81,8 +82,10 @@ export function displayModal(works) {
     
     // Écouteur du bouton retour
     const backButton = modalElement.querySelector(".modal-back");
-    backButton.addEventListener("click", () => {
-        showGallery(works);
+    backButton.addEventListener("click", async () => {
+        await refreshGalleries();
+        const moduleIndex = await import("./index.js");
+        showGallery(moduleIndex.works);
     });
     
     showGallery(works);
@@ -95,7 +98,8 @@ export function displayModal(works) {
  */
 async function deleteWork(workId) {
     let token = sessionStorage.getItem("token");
-
+    const deleteMessage = document.querySelector("#delete-message");
+    
     try {
         const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
             method: "DELETE",
@@ -103,10 +107,11 @@ async function deleteWork(workId) {
         });
         
         if (!response.ok) {
+            deleteMessage.style.color = "#d10000";
             if (response.status === 401) {
-                alert("Session expirée ou non autorisée. Veuillez vous reconnecter.");
+                deleteMessage.innerText = "Session expirée ou non autorisée. Veuillez vous reconnecter.";
             } else {
-                alert("Erreur lors de la suppression du projet.");
+                deleteMessage.innerText = "Erreur lors de la suppression du projet.";
             }
             return false;
         }
@@ -153,17 +158,20 @@ function showGallery(works){
         // Ajout du bouton de l'écouteur de suppression d'élément 
         const deleteIcon = figure.querySelector(".delete-icon");
         deleteIcon.addEventListener("click", async (event) => {
-        
-        if (confirm(`Voulez-vous vraiment supprimer "${work.title}" ?`)) {
-            
             const deletionSuccessful = await deleteWork(work.id);
+            const deleteMessage = document.querySelector("#delete-message");
             
             if (deletionSuccessful) {
+                deleteMessage.style.color = "#09ad2f";
+                deleteMessage.innerText = "Projet supprimé avec succès !"
+                setTimeout(() => {deleteMessage.innerText = "";}, 3000)
                 await refreshGalleries(); 
                 figure.remove();
+
+                const moduleIndex = await import("./index.js");
+                works = moduleIndex.works;
             }
-        }
-});
+        });
 
         modalGrid.appendChild(figure);
     })
@@ -180,11 +188,13 @@ function switchAddPhoto() {
     const photoForm = modalElement.querySelector("form");
     photoForm.addEventListener("submit", async (event) => {
         event.preventDefault();
+        const messageSpan = photoForm.querySelector("#form-message");
         const photo = photoForm.querySelector("input[type=file]").files[0];
         const maxSize = 4 * 1024 * 1024;
         
         if(photo.size > maxSize) {
-            alert("Photo trop volumineuse");
+            messageSpan.style.color = "#d10000";
+            messageSpan.innerText = "Photo trop volumineuse";
             photoForm.reset();
             return
         }
@@ -200,8 +210,6 @@ function switchAddPhoto() {
         formData.append("category", categoryValue);
 
         let token = sessionStorage.getItem("token");
-
-        const messageSpan = photoForm.querySelector("#form-message")
         
         try {
             const response = await fetch(`http://localhost:5678/api/works`, {
@@ -233,8 +241,7 @@ function switchAddPhoto() {
                     imgPreview.remove();
                 }
 
-                setTimeout(() => {
-                    messageSpan.innerText = "";}, 3000)
+                setTimeout(() => {messageSpan.innerText = "";}, 3000)
             }
 
         } catch (error) {
