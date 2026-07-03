@@ -43,7 +43,7 @@ const addPhoto = () => {
                     ${generateCategoryOptions()} 
                 </select>
             </div>
-            <button type="submit" class="btn-validate">Valider</button>
+            <button type="submit" class="btn-validate btn-disabled">Valider</button>
             <span id="form-message"></span>
         </form>
     </div>`;
@@ -186,23 +186,109 @@ function switchAddPhoto() {
     modalBody.innerHTML = addPhoto();
     
     const photoForm = modalElement.querySelector("form");
-    photoForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const messageSpan = photoForm.querySelector("#form-message");
-        const photo = photoForm.querySelector("input[type=file]").files[0];
-        const maxSize = 4 * 1024 * 1024;
-        
-        if(photo.size > maxSize) {
-            messageSpan.style.color = "#d10000";
-            messageSpan.innerText = "Photo trop volumineuse";
-            photoForm.reset();
-            return
+    
+    const fileInput = photoForm.querySelector("#photo-upload");
+    const titleInput = photoForm.querySelector("#photo-title");
+    const categorySelect = photoForm.querySelector("#category-select");
+    const validateBtn = photoForm.querySelector(".btn-validate");
+    const messageSpan = photoForm.querySelector("#form-message");
+    const uploadDiv = photoForm.querySelector(".upload-div");
+
+    
+    validateBtn.disabled = true;
+    validateBtn.classList.add("btn-disabled");
+
+    // Vérification globale
+    function checkFormValidity() {
+        const photo = fileInput.files[0];
+        const title = titleInput.value.trim();
+        const category = categorySelect.value;
+        const maxSize = 4 * 1024 * 1024; // 4 Mo
+
+        const isPhotoValid = photo && photo.size <= maxSize;
+        const isTitleValid = title.length > 0;
+        const isCategoryValid = category !== "";
+
+        if (isPhotoValid && isTitleValid && isCategoryValid) {
+            validateBtn.disabled = false;
+            validateBtn.classList.remove("btn-disabled");
+            messageSpan.innerText = ""; 
+        } else {
+            validateBtn.disabled = true;
+            validateBtn.classList.add("btn-disabled");
+            
+            // Si une photo est trop lourde
+            if (photo && photo.size > maxSize) {
+                messageSpan.style.color = "#d10000";
+                messageSpan.innerText = "La photo dépasse la limite de 4 Mo.";
+            }
+        }
+    }
+
+    // Écouteur sur le changement de fichier (Aperçu + Validation)
+    fileInput.addEventListener("change", () => {
+        const file = fileInput.files[0];
+        const maxSize = 4 * 1024 * 1024
+
+        if (file) {
+
+            if (file.size > maxSize) {
+                messageSpan.style.color = "#d10000";
+                messageSpan.innerText = "La photo dépasse la limite de 4 Mo.";
+                
+                fileInput.value = ""; 
+                
+                const existingPreview = uploadDiv.querySelector(".img-preview");
+                if (existingPreview) existingPreview.remove();
+                
+                const labelPreview = uploadDiv.querySelector("label");
+                if (labelPreview) labelPreview.style.display = "flex";
+
+                checkFormValidity();
+                return;
+            }
+
+            const reader = new FileReader();
+            
+            reader.onload = function (e) {
+                // Masquer le label visuel d'origine
+                const labelPreview = uploadDiv.querySelector("label");
+                if (labelPreview) {
+                    labelPreview.style.display = "none";
+                }
+                
+                // Éviter les doublons d'images si plusieurs changements
+                const existingPreview = uploadDiv.querySelector(".img-preview");
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
+                
+                // Création et affichage de l'image de preview
+                const imgPreview = document.createElement("img");
+                imgPreview.src = e.target.result;
+                imgPreview.alt = "Aperçu de la photo";
+                imgPreview.classList.add("img-preview");
+                
+                uploadDiv.appendChild(imgPreview);
+            };
+            
+            reader.readAsDataURL(file);
         }
 
-        const photoTitle = photoForm.querySelector("input[type=text]").value;
-        const photoCategoryId = photoForm.querySelector("select");
-        const categoryValue = parseInt(photoCategoryId.value);
+        checkFormValidity();
+    });
 
+    // Écouteurs sur titre et sélection de catégories
+    titleInput.addEventListener("input", checkFormValidity);
+    categorySelect.addEventListener("change", checkFormValidity);
+
+    // Submit du formulaire
+    photoForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        
+        const photo = fileInput.files[0];
+        const photoTitle = titleInput.value;
+        const categoryValue = parseInt(categorySelect.value);
 
         const formData = new FormData();
         formData.append("image", photo);
@@ -223,17 +309,21 @@ function switchAddPhoto() {
                 if (response.status === 401) {
                     messageSpan.innerText = "Session expirée ou non autorisée. Veuillez vous reconnecter.";
                 } else {
-                    messageSpan.innerText = "Erreur lors de l'ajout du projet";
+                    messageSpan.innerText = "Erreur lors de l'ajout du projet.";
                 }
             } else {
                 messageSpan.style.color = "#09ad2f";
-                messageSpan.innerText = "Projet ajouté avec succès !";
-                refreshGalleries();
-                photoForm.reset();
-
-                const labelPreview = photoForm.querySelector(".upload-div label");
-                const imgPreview = photoForm.querySelector(".img-preview");
+                messageSpan.innerText = "Projet ajouté avec succès ! 🎉";
                 
+                await refreshGalleries();
+                
+                photoForm.reset();
+                
+                validateBtn.disabled = true;
+                validateBtn.classList.add("btn-disabled");
+
+                const labelPreview = uploadDiv.querySelector("label");
+                const imgPreview = uploadDiv.querySelector(".img-preview");
                 if (labelPreview) {
                     labelPreview.style.display = "flex";
                 }
@@ -241,47 +331,15 @@ function switchAddPhoto() {
                     imgPreview.remove();
                 }
 
-                setTimeout(() => {messageSpan.innerText = "";}, 3000)
+                setTimeout(() => {
+                    messageSpan.innerText = "";
+                }, 3000);
             }
 
         } catch (error) {
             console.error("Erreur réseau :", error);
-        }
-    });
-
-    const fileInput = photoForm.querySelector("#photo-upload");
-    const uploadDiv = photoForm.querySelector(".upload-div");
-    
-    fileInput.addEventListener("change", () => {
-        const file = fileInput.files[0];
-        
-        if (file) {
-            const reader = new FileReader();
-            
-            reader.onload = function (e) {
-                // Vider la div Upload
-                const labelPreview = uploadDiv.querySelector("label");
-                if (labelPreview) {
-                    labelPreview.style.display = "none";
-                }
-
-                const existingPreview = uploadDiv.querySelector(".img-preview");
-                if (existingPreview) {
-                    existingPreview.remove();
-                }
-                
-                // Création élément image d'aperçu
-                const imgPreview = document.createElement("img");
-                imgPreview.src = e.target.result;
-                imgPreview.alt = "Aperçu de la photo";
-                imgPreview.classList.add("img-preview");
-                
-                // On l'ajoute dans la div
-                uploadDiv.appendChild(imgPreview);
-            };
-            
-            // Lancement lecture du fichier
-            reader.readAsDataURL(file);
+            messageSpan.style.color = "#d10000";
+            messageSpan.innerText = "Erreur réseau. Impossible de joindre le serveur.";
         }
     });
 }
