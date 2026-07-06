@@ -1,4 +1,4 @@
-import { refreshGalleries, categories } from "./index.js";
+import { apiLink, refreshGalleries, categories, getWorks } from "./index.js";
 
 // Structure de la modale
 const modalElement = document.createElement("div");
@@ -84,8 +84,7 @@ export function displayModal(works) {
     const backButton = modalElement.querySelector(".modal-back");
     backButton.addEventListener("click", async () => {
         await refreshGalleries();
-        const moduleIndex = await import("./index.js");
-        showGallery(moduleIndex.works);
+        showGallery(getWorks());
     });
     
     showGallery(works);
@@ -101,7 +100,7 @@ async function deleteWork(workId) {
     const deleteMessage = document.querySelector("#delete-message");
     
     try {
-        const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+        const response = await fetch(`${apiLink}/works/${workId}`, {
             method: "DELETE",
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -168,8 +167,7 @@ function showGallery(works){
                 await refreshGalleries(); 
                 figure.remove();
 
-                const moduleIndex = await import("./index.js");
-                works = moduleIndex.works;
+                works = getWorks();
             }
         });
 
@@ -298,7 +296,7 @@ function switchAddPhoto() {
         let token = sessionStorage.getItem("token");
         
         try {
-            const response = await fetch(`http://localhost:5678/api/works`, {
+            const response = await fetch(`${apiLink}/works`, {
                 method: "POST",
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: formData

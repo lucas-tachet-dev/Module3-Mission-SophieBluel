@@ -1,10 +1,15 @@
 import { displayModal } from "./modal.js";
 
 /**
- * Export des variables des projets et catégories
+ * Export des variables des projets, catégories et API
  */
+export const apiLink = "http://localhost:5678/api";
 export let works = [];
 export let categories = [];
+
+export function getWorks() {
+    return works;
+}
 
 /**
  * Récup des catégories dans le localStorage ou API
@@ -14,7 +19,7 @@ async function loadCategories() {
 
     if (localCategories === null) {
         try {
-            const response = await fetch("http://localhost:5678/api/categories");
+            const response = await fetch(`${apiLink}/categories`);
             categories = await response.json();
             localStorage.setItem("categories", JSON.stringify(categories));
         } catch (error) {
@@ -30,7 +35,7 @@ async function loadCategories() {
  */
 export async function refreshGalleries() {
     try {
-        const response = await fetch("http://localhost:5678/api/works");
+        const response = await fetch(`${apiLink}/works`);
         works = await response.json();
         
         const gallery = document.querySelector(".gallery");
