@@ -123,59 +123,39 @@ function setupLogOut () {
     })
 }
 
-// Mise à jour du CSS du bouton selectionné
-function updateButton(select){
-    const btns = document.querySelectorAll(".btn-filters button");
-    for(let i = 0; i < btns.length; i++){
-        if(i === select){
-            btns[i].classList.add("btn-selected")
-        } else {
-            btns[i].classList.remove("btn-selected")
-        }
-    }
-}
-
 // Afficher toutes les projets
-const allButton = document.querySelector(".btn-all");
-allButton.addEventListener("click", () => {
-    updateButton(0);
+const btnAll = document.querySelector(".btn-all");
+btnAll.addEventListener("click", () => {
+    const btnFiltersContainer = document.querySelector(".btn-filters");
+    const allBtns = btnFiltersContainer.querySelectorAll(".btn-filters button");
+    allBtns.forEach(btn => btn.classList.remove("btn-selected"));
+    btnAll.classList.add("btn-selected");
+
     document.querySelector(".gallery").innerHTML =``;
     displayWorks(works);
 });
 
-// Filtrer la catégorie objets
-const filterObjectsButton = document.querySelector(".btn-objects");
-filterObjectsButton.addEventListener("click", () => {
-    const filterObjects = works.filter((works) => {
-        return works.categoryId === 1;
+function setupFiltersBtns() {
+    const btnFiltersContainer = document.querySelector(".btn-filters");
+    
+    categories.forEach((category) => {
+        const btn = document.createElement("button");
+        btn.textContent = category.name;
+        btn.dataset.categoryId = category.id;
+        
+        btn.addEventListener("click", () => {
+            const allBtns = btnFiltersContainer.querySelectorAll(".btn-filters button");
+            allBtns.forEach(btn => btn.classList.remove("btn-selected"));
+            btn.classList.add("btn-selected");
+            
+            document.querySelector(".gallery").innerHTML =``;
+            const filteredWorks = works.filter(work => work.categoryId === category.id);
+            displayWorks(filteredWorks);
+        })
+        
+        btnFiltersContainer.appendChild(btn);
     });
-    updateButton(1);
-    document.querySelector(".gallery").innerHTML =``;
-    displayWorks(filterObjects);
-});
-
-// Filtrer la catégorie Appartements
-const filterAppartmentButton = document.querySelector(".btn-appartments");
-filterAppartmentButton.addEventListener("click", () => {
-    const filterAppartment = works.filter((works) => {
-        return works.categoryId === 2;
-    });
-    updateButton(2);
-    document.querySelector(".gallery").innerHTML =``;
-    displayWorks(filterAppartment);
-});
-
-// Filtrer la catégorie Appartements
-const filterHotelButton = document.querySelector(".btn-hotel");
-filterHotelButton.addEventListener("click", () => {
-    const filterHotel = works.filter((works) => {
-        return works.categoryId === 3;
-    });
-    updateButton(3);
-    document.querySelector(".gallery").innerHTML =``;
-    displayWorks(filterHotel);
-});
-
+}
 
 /**
  * Lancement de initial
@@ -183,6 +163,7 @@ filterHotelButton.addEventListener("click", () => {
 async function init() {
     await loadCategories();
     await refreshGalleries();
+    setupFiltersBtns();
     checkLogin();
 }
 

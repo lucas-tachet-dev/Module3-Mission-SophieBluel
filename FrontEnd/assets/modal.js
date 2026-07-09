@@ -95,6 +95,7 @@ export function displayModal(works) {
  * @param {number} workId 
  * @returns boolean
  */
+
 async function deleteWork(workId) {
     let token = sessionStorage.getItem("token");
     const deleteMessage = document.querySelector("#delete-message");
