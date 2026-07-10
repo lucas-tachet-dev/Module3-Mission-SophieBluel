@@ -220,7 +220,8 @@ nav a:hover {
 }
 #contact {
 	width: 50%;
-margin: auto;
+	margin: auto;
+	margin-top: 80px;
 }
 #contact > * {
 	text-align: center;
