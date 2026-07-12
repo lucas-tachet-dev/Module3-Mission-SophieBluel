@@ -71,7 +71,10 @@ function displayWorks(works) {
 //Récupération du token de Sophie
 let token = sessionStorage.getItem("token");
 
-// Vérification du token de login
+/**
+ * Vérification du token de login et changement de mise en page selon le résultat
+ */
+
 function checkLogin() {
 
     const projectsTitle = document.querySelector("#portfolio h2");
@@ -109,6 +112,9 @@ function checkLogin() {
     } 
 }
 
+/**
+ * Fonction pour déconnecter l'utilsateur du mode édition
+ */
 function setupLogOut () {
     // Cibler le LogOut
     const logOutButton = document.getElementById("login");
@@ -135,6 +141,9 @@ btnAll.addEventListener("click", () => {
     displayWorks(works);
 });
 
+/**
+ * Fonction d'affichage boutons de filtres depuis l'API
+ */
 function setupFiltersBtns() {
     const btnFiltersContainer = document.querySelector(".btn-filters");
     

@@ -2,8 +2,11 @@
 const login = document.querySelector("#login");
 console.log(login)
 
-const btnConnect = document.querySelector("#login button");
 
+/**
+ * Ecouteur du formulaire de connexion
+*/
+const btnConnect = document.querySelector("#login button");
 btnConnect.addEventListener("click", async (event) => {
     event.preventDefault();
 

@@ -1,6 +1,9 @@
 import { apiLink, refreshGalleries, categories, getWorks } from "./index.js";
 
-// Structure de la modale
+/**
+ * Element de structure de la modale
+ */
+
 const modalElement = document.createElement("div");
 
 const photoGallery = `
