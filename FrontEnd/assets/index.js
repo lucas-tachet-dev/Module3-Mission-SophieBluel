@@ -72,7 +72,7 @@ function displayWorks(works) {
 let token = sessionStorage.getItem("token");
 
 /**
- * Vérification du token de login et changement de mise en page selon le résultat
+ * Vérification du token de login et mise en page selon l'état
  */
 
 function checkLogin() {
