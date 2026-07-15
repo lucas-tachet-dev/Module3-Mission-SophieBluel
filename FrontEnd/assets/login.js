@@ -1,10 +1,5 @@
 import { apiLink } from "./config.js";
 
-// Submit du login
-const login = document.querySelector("#login");
-console.log(login)
-
-
 /**
  * Ecouteur du formulaire de connexion
 */
