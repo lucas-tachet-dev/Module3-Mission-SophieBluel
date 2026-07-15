@@ -1,3 +1,5 @@
+import { apiLink } from "./config.js";
+
 // Submit du login
 const login = document.querySelector("#login");
 console.log(login)
@@ -25,7 +27,7 @@ btnConnect.addEventListener("click", async (event) => {
     }
 
     //envoie d'une requête POST à l'API
-    const response = await fetch("http://localhost:5678/api/users/login", {
+    const response = await fetch(`${apiLink}/users/login`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(loginData)

@@ -1,9 +1,9 @@
+import { apiLink } from "./config.js";
 import { displayModal } from "./modal.js";
 
 /**
- * Export des variables des projets, catégories et API
+ * Export des variables des projets et catégories
  */
-export const apiLink = "http://localhost:5678/api";
 export let works = [];
 export let categories = [];
 

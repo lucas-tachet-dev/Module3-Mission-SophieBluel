@@ -1,4 +1,5 @@
-import { apiLink, refreshGalleries, categories, getWorks } from "./index.js";
+import { apiLink } from "./config.js";
+import { refreshGalleries, categories, getWorks } from "./index.js";
 
 /**
  * Element de structure de la modale
