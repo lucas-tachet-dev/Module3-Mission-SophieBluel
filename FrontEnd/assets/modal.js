@@ -12,7 +12,7 @@ const photoGallery = `
     <h2>Galerie Photo</h2>
     <div class="modal-grid">
     </div>
-    <button class="btn-add-photo">Ajouter une photo</button>
+    <button class="btn-add-photo selectable">Ajouter une photo</button>
     <span id="delete-message"></span>
 </div>`;
 
@@ -64,8 +64,8 @@ export function displayModal(works) {
         <aside id="edit-modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
             <div class="modal-wrapper">
                 <div class="modal-btns">
-                    <img class="modal-back" src="assets/icons/arrow-left-solid-full.svg" alt="Retour en arrière" />
-                    <img class="modal-close" src="assets/icons/xmark-solid-full.svg" alt="Fermeture de la fenêtre d'édition" />
+                    <img class="modal-back selectable" src="assets/icons/arrow-left-solid-full.svg" alt="Retour en arrière" />
+                    <img class="modal-close selectable" src="assets/icons/xmark-solid-full.svg" alt="Fermeture de la fenêtre d'édition" />
                 </div>
                 <div class="modal-body"></div>
             </div>
@@ -215,11 +215,13 @@ function switchAddPhoto() {
         if (isPhotoValid && isTitleValid && isCategoryValid) {
             validateBtn.disabled = false;
             validateBtn.classList.remove("btn-disabled");
+            validateBtn.classList.add("selectable");
             messageSpan.innerText = ""; 
         } else {
             validateBtn.disabled = true;
             validateBtn.classList.add("btn-disabled");
-            
+            validateBtn.classList.remove("selectable");
+
             // Si une photo est trop lourde
             if (photo && photo.size > maxSize) {
                 messageSpan.style.color = "#d10000";

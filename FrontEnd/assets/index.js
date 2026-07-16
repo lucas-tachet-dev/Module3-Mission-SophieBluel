@@ -90,7 +90,7 @@ function checkLogin() {
         headerElement.insertAdjacentElement("beforebegin", editionBar);
         // modifier les projets pour la modale
         projectsTitle.innerHTML = `Mes Projets
-        <span class="edit-projects">
+        <span class="edit-projects selectable">
         <img src="assets/icons/pen-to-square.svg" alt="icône de modification"/> 
         modifier</span>`;
 
@@ -151,6 +151,7 @@ function setupFiltersBtns() {
         const btn = document.createElement("button");
         btn.textContent = category.name;
         btn.dataset.categoryId = category.id;
+        btn.classList.add("selectable")
         
         btn.addEventListener("click", () => {
             const allBtns = btnFiltersContainer.querySelectorAll(".btn-filters button");

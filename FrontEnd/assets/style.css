@@ -337,6 +337,10 @@ footer nav ul {
 
 }
 
+.selectable {
+	cursor: pointer;
+}
+
 .modal-btns {
 	display: flex;
     justify-content: space-between;
